@@ -1,7 +1,12 @@
+const logger1 = require("./logger1");
+const logger2 = require("./logger2");
 const Joi = require("joi");
 const express = require("express");
 const app = express();
 app.use(express.json());
+
+app.use(logger1);
+app.use(logger2);
 
 const genres = [
   {

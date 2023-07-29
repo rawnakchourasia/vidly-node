@@ -1,23 +1,35 @@
+const startupDebugger = require("debug")("app:startup");
+const dbDebugger = require("debug")("app:db");
+
 const logger1 = require("./logger1");
 const logger2 = require("./logger2");
+
 const config = require("config");
+
 const morgan = require("morgan");
+
 const Joi = require("joi");
+
 const express = require("express");
 const app = express();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 // Configuration
-console.log("Application Name: " + config.get("name")); // Application Name: My Express App - Development
-console.log("Mail Server: " + config.get("mail.host")); // Mail Server: dev-mail-server
-console.log("Mail Password: " + config.get("mail.password")); // Mail Server: dev-mail-server
+startupDebugger("Application Name: " + config.get("name")); // Application Name: My Express App - Development
+startupDebugger("Mail Server: " + config.get("mail.host")); // Mail Server: dev-mail-server
+startupDebugger("Mail Password: " + config.get("mail.password")); // Mail Password: 1234
 
 if (app.get("env") === "development") {
   app.use(morgan("tiny"));
-  console.log("Morgan enabled..."); // Morgan enabled...
+  startupDebugger("Morgan enabled..."); // Morgan enabled...
 }
+
+// Db work...
+dbDebugger("Connected to the database...");
+
 app.use(logger1);
 app.use(logger2);
 
@@ -90,5 +102,5 @@ function validateGenre(result) {
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Server running at Port ${port}`);
+  startupDebugger(`Server running at Port ${port}`);
 });

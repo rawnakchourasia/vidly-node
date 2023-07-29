@@ -1,10 +1,23 @@
 const logger1 = require("./logger1");
 const logger2 = require("./logger2");
+const config = require("config");
+const morgan = require("morgan");
 const Joi = require("joi");
 const express = require("express");
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
+// Configuration
+console.log("Application Name: " + config.get("name")); // Application Name: My Express App - Development
+console.log("Mail Server: " + config.get("mail.host")); // Mail Server: dev-mail-server
+console.log("Mail Password: " + config.get("mail.password")); // Mail Server: dev-mail-server
+
+if (app.get("env") === "development") {
+  app.use(morgan("tiny"));
+  console.log("Morgan enabled..."); // Morgan enabled...
+}
 app.use(logger1);
 app.use(logger2);
 
